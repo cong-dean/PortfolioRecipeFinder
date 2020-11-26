@@ -1,0 +1,57 @@
+<apex:page standardController="Recipe__c" recordSetVar="recipes" extensions="recipeFinderExtension2">
+
+    <style type = "text/css">  
+        .listStyle {
+        text-align:left;
+        width:140px;
+        font-size:12px;
+        }
+    </style>
+    
+    <apex:form >
+        <apex:pageBlock >
+ 
+            <apex:pageBlockSection title="CRITERIA (to select multiple items, use control-click (Windows) or command-click (Mac))">
+                <apex:panelGrid columns="3">
+                    
+                    <apex:selectList label="Ingredients (control-click to select multiple ingredients)"  value="{!requiredIngredients}" multiselect="true" styleClass="listStyle" id="ingList">
+                        <apex:selectOptions value="{!ingredientOptions}"/>
+                    </apex:selectList><p/>
+                    
+                    <apex:commandButton value="Clear Ingredients" action="{!clearRequiredIngredients}" styleClass="width:140px" rerender="ingList"/>
+                                      
+                    <apex:selectList label="Dietary Restrictions (control-click to select multiple restrictions)" value="{!requiredDietaryRestrictions}" multiselect="true" styleClass="listStyle" id="dietList">
+                        <apex:selectOptions value="{!dietaryOptions}"/>
+                    </apex:selectList><p/>
+                    
+                    <apex:commandButton value="Clear Dietary Restrictions" action="{!clearDietaryRestrictions}" style="width:140px" rerender="dietList"/>
+                    
+                    <apex:commandButton value="Update Recipes" reRender="recipelist" action="{!search}"/>
+                    
+                </apex:panelGrid>
+                
+            </apex:pageBlockSection>
+            
+            
+            <!-- BEGINNING OF RECIPES -->
+            
+            <apex:pageBlockSection title="RECIPES (click on items to see full ingredients list)" columns="3">
+                
+                <apex:pageBlockSectionItem >
+                    <apex:pageBlockTable value="{!filteredRecipes}" var="recipe" id="recipelist" styleClass="listStyle">
+                        <apex:column >
+                            <apex:commandLink value="{!recipe.Name}" action="{!setSelectedRecipe}" rerender="selectedrecipe">
+                                <apex:param name="selectedRecipeParam" value="{!recipe.id}" assignTo="{!sr}"/>
+                            </apex:commandLink>
+                        </apex:column>              
+                    </apex:pageBlockTable>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >                    
+                    <apex:outputField label="" value="{!selectedRecipe.Full_Ingredients_List__c}" id="selectedrecipe">{!selectedRecipe.Full_Ingredients_List__c}</apex:outputField>                    
+                </apex:pageBlockSectionItem>
+                
+            </apex:pageBlockSection>           
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>
